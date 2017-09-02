@@ -1,0 +1,24 @@
+{
+    "name": "viviniko/urlrewrite",
+    "description": "VIVINIKO Url Rewrite Service Provider",
+	"keywords": ["viviniko", "url rewrite", "laravel"],
+	"homepage": "http://viviniko.com",
+	"license": "MIT",
+	"authors": [
+        {
+            "name": "viviniko",
+            "email": "viviniko.shop@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "viviniko/support": "dev-master"
+    },
+	"autoload": {
+        "psr-0": {
+            "Viviniko\\Urlrewrite": "src"
+        }
+    },
+    "minimum-stability": "dev",
+	"prefer-stable": true
+}
