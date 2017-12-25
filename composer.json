@@ -22,7 +22,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Viviniko\Urlrewrite\\UrlrewriteServiceProvider"
+                "Viviniko\\Urlrewrite\\UrlrewriteServiceProvider"
             ]
         }
     },
