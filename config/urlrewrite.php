@@ -23,8 +23,6 @@ return [
     'urlrewrite' => 'Viviniko\Urlrewrite\Models\Urlrewrite',
 
     'actions' => [
-        'catalog.category' => 'Catalog\CategoryController@index',
-        'catalog.product' => 'Catalog\ProductController@show',
-        'portal.page' => 'Portal\PageController@show'
+        
     ],
 ];
