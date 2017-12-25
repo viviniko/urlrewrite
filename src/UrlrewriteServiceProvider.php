@@ -1,6 +1,6 @@
 <?php
 
-namespace Common\Urlrewrite;
+namespace Viviniko\Urlrewrite;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Viviniko\Urlrewrite\Console\Commands\UrlrewriteTableCommand;

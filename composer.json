@@ -14,11 +14,18 @@
         "php": ">=7.0",
         "viviniko/support": "dev-master"
     },
-	"autoload": {
+    "autoload": {
         "psr-0": {
             "Viviniko\\Urlrewrite": "src"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Viviniko\Urlrewrite\\UrlrewriteServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "dev",
-	"prefer-stable": true
+    "prefer-stable": true
 }
