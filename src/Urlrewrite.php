@@ -27,9 +27,9 @@ class Urlrewrite
         return $this->urlrewriteService->getEntityIdByRequestPath($requestPath);
     }
 
-    public function routes()
+    public function routes($actions = null)
     {
-        $actions = Config::get('urlrewrite.actions');
+        $actions = $actions ?? Config::get('urlrewrite.actions');
 
         $this->urlrewriteService->all()->each(function ($item) use ($actions) {
             if (trim($item->request_path) && ($action = isset($actions[$item->entity_type]) ? $actions[$item->entity_type] : null)) {
