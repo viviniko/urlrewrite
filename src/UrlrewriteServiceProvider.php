@@ -39,7 +39,7 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/urlrewrite.php', 'urlrewrite');
 
-
+        $this->registerRepositories();
 
         $this->registerUrlrewriteService();
 
