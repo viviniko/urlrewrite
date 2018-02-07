@@ -2,7 +2,12 @@
 
 namespace Viviniko\Urlrewrite\Services\Urlrewrite;
 
+use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Routing\RouteBinding;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Viviniko\Urlrewrite\Contracts\UrlrewriteService;
 use Viviniko\Urlrewrite\Repositories\Urlrewrite\UrlrewriteRepository;
 
@@ -14,17 +19,77 @@ class UrlrewriteServiceImpl implements UrlrewriteService
     protected $urlrewriteRepository;
 
     /**
+     * @var \Illuminate\Container\Container
+     */
+    protected $container;
+
+    /**
+     * @var array
+     */
+    protected $binders = [];
+
+    /**
      * Urlrewrite constructor.
      * @param \Viviniko\Urlrewrite\Repositories\Urlrewrite\UrlrewriteRepository
+     * @param \Illuminate\Container\Container  $container
      */
-    public function __construct(UrlrewriteRepository $urlrewriteRepository)
+    public function __construct(UrlrewriteRepository $urlrewriteRepository, Container $container = null)
     {
         $this->urlrewriteRepository = $urlrewriteRepository;
+        $this->container = $container;
     }
 
     /**
-     * @param $action
-     * @param null $entityTypes
+     * {@inheritdoc}
+     */
+    public function resolveEntity($entityType, $entityId)
+    {
+        if (isset($this->binders[$entityType])) {
+            return call_user_func($this->binders[$entityType], $entityId);
+        }
+
+        $morphMap = Relation::morphMap();
+        if (isset($morphMap[$entityType])) {
+            $entityType = $morphMap[$entityType];
+        }
+        if (class_exists($entityType)) {
+            $entity = $this->container->make($entityType);
+            if ($entity instanceof Model) {
+                return $entity->find($entityId);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function bind($entityType, $binder)
+    {
+        $this->binders[$entityType] = RouteBinding::forCallback(
+            $this->container, $binder
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rewrite($entityType, $uses = null)
+    {
+        if (!$uses) {
+            foreach ($entityType as $type => $uses) {
+                $this->rewrite($type, $uses);
+            }
+        } else {
+            $this->getRequestPathsByEntityType($entityType)->each(function ($requestPath) use ($uses) {
+                Route::any($requestPath, Str::contains($uses, '@') ? $uses : "{$uses}@handleUrlrewrite");
+            });
+        }
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function action($action, $entityTypes = null)
     {
@@ -34,15 +99,14 @@ class UrlrewriteServiceImpl implements UrlrewriteService
     }
 
     /**
-     * @param $requestPath
-     * @return mixed
+     * {@inheritdoc}
      */
     public function findByRequestPath($requestPath)
     {
         return $this->urlrewriteRepository->findByRequestPath($requestPath);
     }
 
-    public function getRequestPathsByEntityType($entityType)
+    protected function getRequestPathsByEntityType($entityType)
     {
         static $requestPaths;
 
