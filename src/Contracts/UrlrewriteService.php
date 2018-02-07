@@ -9,7 +9,7 @@ interface UrlrewriteService
      * @param null $uses
      * @return mixed
      */
-    public function rewrite($entityType, $uses = null);
+    public function routes($entityType, $uses = null);
 
     /**
      * @param $action
