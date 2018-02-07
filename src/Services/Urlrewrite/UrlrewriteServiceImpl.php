@@ -24,16 +24,12 @@ class UrlrewriteServiceImpl implements UrlrewriteService
 
     /**
      * @param $action
+     * @param null $entityTypes
      */
-    public function action($action)
+    public function action($action, $entityTypes = null)
     {
-        $requestPaths = $this->urlrewriteRepository->all()->pluck('request_path');
-
-        $requestPaths->each(function ($requestPath) use ($action) {
-            $requestPath = trim(trim($requestPath), '/');
-            if (!empty($requestPath)) {
-                Route::any($requestPath, $action);
-            }
+        $this->getRequestPathsByEntityType($entityTypes)->each(function ($requestPath) use ($action) {
+            Route::any($requestPath, $action);
         });
     }
 
@@ -44,5 +40,33 @@ class UrlrewriteServiceImpl implements UrlrewriteService
     public function findByRequestPath($requestPath)
     {
         return $this->urlrewriteRepository->findByRequestPath($requestPath);
+    }
+
+    public function getRequestPathsByEntityType($entityType)
+    {
+        static $requestPaths;
+
+        if (!$requestPaths) {
+            $requestPaths = $this->urlrewriteRepository->all()
+                ->filter(function ($item) {
+                    $requestPath = trim(trim($item->request_path), '/');
+                    return !empty($requestPath);
+                })
+                ->groupBy('entity_type')
+                ->pluck('request_path');
+        }
+
+        $result = collect([]);
+
+        if (!$entityType) {
+            $result = $requestPaths->values();
+        } else {
+            $entityType = (array) $entityType;
+            while ($type = array_pop($entityType)) {
+                $result->merge($requestPaths->get($type));
+            }
+        }
+
+        return $result;
     }
 }
