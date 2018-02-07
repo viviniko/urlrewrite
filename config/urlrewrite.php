@@ -21,8 +21,4 @@ return [
     |
     */
     'urlrewrite' => 'Viviniko\Urlrewrite\Models\Urlrewrite',
-
-    'actions' => [
-
-    ],
 ];

@@ -5,17 +5,8 @@ namespace Viviniko\Urlrewrite\Contracts;
 interface UrlrewriteService
 {
     /**
-     * Get all data.
-     *
-     * @return \Illuminate\Support\Collection
+     * @param $requestPath
+     * @return mixed
      */
-    public function all();
-
-    /**
-     * Get entity id.
-     *
-     * @param  string  $requestPath
-     * @return int
-     */
-    public function getEntityIdByRequestPath($requestPath);
+    public function findByRequestPath($requestPath);
 }

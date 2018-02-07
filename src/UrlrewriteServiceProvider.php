@@ -39,6 +39,8 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/urlrewrite.php', 'urlrewrite');
 
+
+
         $this->registerUrlrewriteService();
 
         $this->registerCommands();
@@ -56,6 +58,14 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
         });
     }
 
+    protected function registerRepositories()
+    {
+        $this->app->singleton(
+            \Viviniko\Urlrewrite\Repositories\Urlrewrite\UrlrewriteRepository::class,
+            \Viviniko\Urlrewrite\Repositories\Urlrewrite\EloquentUrlrewrite::class
+        );
+    }
+
     /**
      * Register the rewrite service provider.
      *
@@ -63,9 +73,9 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
      */
     protected function registerUrlrewriteService()
     {
-        $this->app->singleton(\Viviniko\Urlrewrite\Contracts\UrlrewriteService::class, \Viviniko\Urlrewrite\Services\Urlrewrite\EloquentUrlrewrite::class);
+        $this->app->singleton('urlrewrite', \Viviniko\Urlrewrite\Services\Urlrewrite\UrlrewriteServiceImpl::class);
 
-        $this->app->singleton('urlrewrite', \Viviniko\Urlrewrite\Urlrewrite::class);
+        $this->app->alias('urlrewrite', \Viviniko\Urlrewrite\Urlrewrite::class);
     }
 
     /**
