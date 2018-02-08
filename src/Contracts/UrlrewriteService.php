@@ -6,9 +6,10 @@ interface UrlrewriteService
 {
     /**
      * @param $action
+     * @param mixed $methods
      * @param null $entityTypes
      */
-    public function action($action, $entityTypes = null);
+    public function action($action, $methods = 'any', $entityTypes = null);
 
     /**
      * @param $requestPath

@@ -75,10 +75,13 @@ class UrlrewriteServiceImpl implements UrlrewriteService
     /**
      * {@inheritdoc}
      */
-    public function action($action, $entityTypes = null)
+    public function action($action, $methods = 'any', $entityTypes = null)
     {
-        $this->getRequestPathsByEntityType($entityTypes)->each(function ($requestPath) use ($action) {
-            Route::any($requestPath, $action);
+        $this->getRequestPathsByEntityType($entityTypes)->each(function ($requestPath) use ($action, $methods) {
+            if (is_string($methods))
+                Route::$methods($requestPath, $action);
+            else
+                Route::match($methods, $requestPath, $action);
         });
     }
 
