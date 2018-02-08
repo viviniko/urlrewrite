@@ -12,7 +12,7 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
      *
      * @var bool
      */
-    protected $defer = true;
+    protected $defer = false;
 
     /**
      * Bootstrap the application services.
