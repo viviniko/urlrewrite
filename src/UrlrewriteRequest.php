@@ -8,12 +8,12 @@ trait UrlrewriteRequest
 {
     public function callAction($method, $parameters)
     {
-        $this->resolveAction($method, $parameters);
+        $this->urlrewrite($method, $parameters);
 
         return call_user_func_array([$this, $method], $parameters);
     }
 
-    private function resolveAction(&$method, &$parameters)
+    protected function urlrewrite(&$method, &$parameters)
     {
         if (empty($parameters) || !is_null($parameters[0]))
             return;
