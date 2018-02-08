@@ -2,6 +2,7 @@
 
 namespace Viviniko\Urlrewrite;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Viviniko\Urlrewrite\Console\Commands\UrlrewriteTableCommand;
 
@@ -28,6 +29,10 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
 
         // Register commands
         $this->commands('command.urlrewrite.table');
+
+        Route::macro('urlrewrite', function ($entityTypes, $action, $methods = 'get') {
+            $this->app['urlrewrite']->action($action, $methods, $entityTypes);
+        });
     }
 
     /**
