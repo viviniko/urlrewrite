@@ -101,7 +101,9 @@ class UrlrewriteServiceImpl implements UrlrewriteService
                     return !empty($requestPath);
                 })
                 ->groupBy('entity_type')
-                ->pluck('request_path');
+                ->map(function ($items) {
+                    return $items->pluck('request_path');
+                });
         }
 
         $result = collect([]);
@@ -111,7 +113,7 @@ class UrlrewriteServiceImpl implements UrlrewriteService
         } else {
             $entityType = (array) $entityType;
             while ($type = array_pop($entityType)) {
-                $result->merge($requestPaths->get($type));
+                $result = $result->merge($requestPaths->get($type));
             }
         }
 
