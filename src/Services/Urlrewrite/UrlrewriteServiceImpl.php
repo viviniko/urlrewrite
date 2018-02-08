@@ -75,20 +75,6 @@ class UrlrewriteServiceImpl implements UrlrewriteService
     /**
      * {@inheritdoc}
      */
-    public function controller($entityType, $uses = null)
-    {
-        if (!$uses) {
-            foreach ($entityType as $type => $uses) {
-                $this->controller($type, $uses);
-            }
-        } else {
-            $this->action(Str::contains($uses, '@') ? $uses : "{$uses}@handleUrlrewrite", $entityType);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function action($action, $entityTypes = null)
     {
         $this->getRequestPathsByEntityType($entityTypes)->each(function ($requestPath) use ($action) {

@@ -20,19 +20,21 @@ trait UrlrewriteTrait
             $model->$key = ltrim($model->$key, '/');
 
             Validator::make(['request_path' => $model->$key], [
-                'request_path' => 'required|string|max:255|unique:' . Config::get('urlrewrite.urlrewrites_table') . ',request_path' . ($model->urlrewrite ? (',' . $model->urlrewrite->id) : '')
+                'request_path' => 'max:255|unique:' . Config::get('urlrewrite.urlrewrites_table') . ',request_path' . ($model->urlrewrite ? (',' . $model->urlrewrite->id) : '')
             ])->validate();
         });
 
         static::saved(function ($model) {
             $key = $model->getUrlrewriteKeyName();
-            $model->urlrewrite()->updateOrCreate([
-                'entity_type' => $model->getMorphClass(),
-                'entity_id' => $model->id,
-            ], [
-                'request_path' => $model->$key,
-                'target_path' => '',
-            ]);
+            if (!empty($model->$key)) {
+                $model->urlrewrite()->updateOrCreate([
+                    'entity_type' => $model->getMorphClass(),
+                    'entity_id' => $model->id,
+                ], [
+                    'request_path' => $model->$key,
+                    'target_path' => '',
+                ]);
+            }
         });
 
         static::deleted(function ($model) {
@@ -48,10 +50,5 @@ trait UrlrewriteTrait
     public function getUrlrewriteKeyName()
     {
         return 'url_rewrite';
-    }
-
-    public function setUrlRewriteAttribute($value)
-    {
-        $this->attributes['url_rewrite'] = ltrim($value, '/');
     }
 }

@@ -5,13 +5,6 @@ namespace Viviniko\Urlrewrite\Contracts;
 interface UrlrewriteService
 {
     /**
-     * @param $entityType
-     * @param null $uses
-     * @return mixed
-     */
-    public function routes($entityType, $uses = null);
-
-    /**
      * @param $action
      * @param null $entityTypes
      */
