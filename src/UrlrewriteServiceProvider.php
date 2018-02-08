@@ -30,8 +30,10 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
         // Register commands
         $this->commands('command.urlrewrite.table');
 
-        Route::macro('urlrewrite', function ($entityTypes, $action, $methods = 'get') {
-            $this->app['urlrewrite']->action($action, $methods, $entityTypes);
+        $urlrewriteService = $this->app['urlrewrite'];
+
+        Route::macro('urlrewrite', function ($entityTypes, $action, $methods = 'get') use ($urlrewriteService) {
+            $urlrewriteService->action($action, $methods, $entityTypes);
         });
     }
 
