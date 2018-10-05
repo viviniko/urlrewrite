@@ -2,6 +2,7 @@
 
 namespace Viviniko\Urlrewrite;
 
+use Illuminate\Database\QueryException;
 use Viviniko\Urlrewrite\Models\Urlrewrite;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
@@ -40,7 +41,11 @@ trait UrlrewriteTrait
         });
 
         static::deleted(function ($model) {
-            $model->urlrewrite()->delete();
+            try {
+                $model->urlrewrite()->delete();
+            } catch (QueryException $e) {
+                // ignored
+            }
         });
     }
 
