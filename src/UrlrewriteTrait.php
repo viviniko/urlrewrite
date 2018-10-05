@@ -19,9 +19,11 @@ trait UrlrewriteTrait
             $key = $model->getUrlrewriteKeyName();
             $model->$key = ltrim($model->$key, '/');
 
-            Validator::make(['request_path' => $model->$key], [
-                'request_path' => 'max:255|unique:' . Config::get('urlrewrite.urlrewrites_table') . ',request_path' . ($model->urlrewrite ? (',' . $model->urlrewrite->id) : '')
-            ])->validate();
+            if (!empty($model->$key)) {
+                Validator::make(['request_path' => $model->$key], [
+                    'request_path' => 'max:255|unique:' . Config::get('urlrewrite.urlrewrites_table') . ',request_path' . ($model->urlrewrite ? (',' . $model->urlrewrite->id) : '')
+                ])->validate();
+            }
         });
 
         static::saved(function ($model) {
