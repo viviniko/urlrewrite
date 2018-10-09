@@ -68,8 +68,8 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
     protected function registerRepositories()
     {
         $this->app->singleton(
-            \Viviniko\Urlrewrite\Repositories\Urlrewrite\UrlrewriteRepository::class,
-            \Viviniko\Urlrewrite\Repositories\Urlrewrite\EloquentUrlrewrite::class
+            \Viviniko\Urlrewrite\Repositories\UrlrewriteRepository::class,
+            \Viviniko\Urlrewrite\Repositories\EloquentUrlrewrite::class
         );
     }
 
@@ -80,9 +80,9 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
      */
     protected function registerUrlrewriteService()
     {
-        $this->app->singleton('urlrewrite', \Viviniko\Urlrewrite\Services\Urlrewrite\UrlrewriteServiceImpl::class);
+        $this->app->singleton('urlrewrite', \Viviniko\Urlrewrite\Services\UrlrewriteServiceImpl::class);
 
-        $this->app->alias('urlrewrite', \Viviniko\Urlrewrite\Urlrewrite::class);
+        $this->app->alias('urlrewrite', \Viviniko\Urlrewrite\Services\UrlrewriteService::class);
     }
 
     /**
@@ -94,7 +94,7 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
     {
         return [
             'urlrewrite',
-            \Viviniko\Urlrewrite\Contracts\UrlrewriteService::class,
+            \Viviniko\Urlrewrite\Services\UrlrewriteService::class,
         ];
     }
 }

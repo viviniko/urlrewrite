@@ -1,6 +1,6 @@
 <?php
 
-namespace Viviniko\Urlrewrite\Contracts;
+namespace Viviniko\Urlrewrite\Services;
 
 interface UrlrewriteService
 {

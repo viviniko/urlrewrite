@@ -11,14 +11,4 @@ return [
     |
     */
     'urlrewrites_table' => 'core_url_rewrites',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Url rewrite Model
-    |--------------------------------------------------------------------------
-    |
-    | This is the rewrite model.
-    |
-    */
-    'urlrewrite' => 'Viviniko\Urlrewrite\Models\Urlrewrite',
 ];

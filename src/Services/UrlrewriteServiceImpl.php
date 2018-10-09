@@ -1,20 +1,18 @@
 <?php
 
-namespace Viviniko\Urlrewrite\Services\Urlrewrite;
+namespace Viviniko\Urlrewrite\Services;
 
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Routing\RouteBinding;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use Viviniko\Urlrewrite\Contracts\UrlrewriteService;
-use Viviniko\Urlrewrite\Repositories\Urlrewrite\UrlrewriteRepository;
+use Viviniko\Urlrewrite\Repositories\UrlrewriteRepository;
 
 class UrlrewriteServiceImpl implements UrlrewriteService
 {
     /**
-     * @var \Viviniko\Urlrewrite\Repositories\Urlrewrite\UrlrewriteRepository
+     * @var \Viviniko\Urlrewrite\Repositories\UrlrewriteRepository
      */
     protected $urlrewriteRepository;
 
@@ -30,7 +28,7 @@ class UrlrewriteServiceImpl implements UrlrewriteService
 
     /**
      * Urlrewrite constructor.
-     * @param \Viviniko\Urlrewrite\Repositories\Urlrewrite\UrlrewriteRepository
+     * @param \Viviniko\Urlrewrite\Repositories\UrlrewriteRepository
      * @param \Illuminate\Container\Container  $container
      */
     public function __construct(UrlrewriteRepository $urlrewriteRepository, Container $container = null)

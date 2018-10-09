@@ -1,6 +1,6 @@
 <?php
 
-namespace Viviniko\Urlrewrite\Repositories\Urlrewrite;
+namespace Viviniko\Urlrewrite\Repositories;
 
 interface UrlrewriteRepository
 {
