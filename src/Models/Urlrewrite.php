@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Config;
 
 class Urlrewrite extends Model
 {
+    protected $fillable = [
+        'request_path', 'target_path', 'entity_type', 'entity_id'
+    ];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
