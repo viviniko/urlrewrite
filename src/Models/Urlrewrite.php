@@ -10,7 +10,7 @@ class Urlrewrite extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'request_path', 'target_path', 'entity_type', 'entity_id'
+        'request_path', 'entity_type', 'entity_id'
     ];
 
     public function __construct(array $attributes = [])

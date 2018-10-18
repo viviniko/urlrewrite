@@ -30,10 +30,10 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
         // Register commands
         $this->commands('command.urlrewrite.table');
 
-        $urlrewriteService = $this->app['urlrewrite'];
+        $urlrewrite = $this->app['urlrewrite'];
 
-        Route::macro('urlrewrite', function ($entityTypes, $action, $methods = 'get') use ($urlrewriteService) {
-            $urlrewriteService->action($action, $methods, $entityTypes);
+        Route::macro('rewrite', function ($entityType, $targetRoute) use ($urlrewrite) {
+            $urlrewrite->rewrite($entityType, $targetRoute);
         });
     }
 
@@ -80,9 +80,12 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
      */
     protected function registerUrlrewriteService()
     {
-        $this->app->singleton('urlrewrite', \Viviniko\Urlrewrite\Services\UrlrewriteServiceImpl::class);
-
-        $this->app->alias('urlrewrite', \Viviniko\Urlrewrite\Services\UrlrewriteService::class);
+        $this->app->singleton(
+            \Viviniko\Urlrewrite\Services\UrlrewriteService::class,
+            \Viviniko\Urlrewrite\Services\UrlrewriteServiceImpl::class
+        );
+        $this->app->singleton('urlrewrite', \Viviniko\Urlrewrite\Rewrite::class);
+        $this->app->alias('urlrewrite', \Viviniko\Urlrewrite\Contracts\Urlrewrite::class);
     }
 
     /**
@@ -95,6 +98,7 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
         return [
             'urlrewrite',
             \Viviniko\Urlrewrite\Services\UrlrewriteService::class,
+            \Viviniko\Urlrewrite\Contracts\Urlrewrite::class,
         ];
     }
 }

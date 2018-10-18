@@ -18,9 +18,9 @@ trait UrlrewriteTrait
     {
         static::saving(function ($model) {
             $key = $model->getUrlrewriteKeyName();
-            $model->$key = ltrim($model->$key, '/');
-
+            $model->$key = trim($model->$key, " \t\n\r \v/");
             if (!empty($model->$key)) {
+                $model->$key = '/' . $model->$key;
                 Validator::make(['request_path' => $model->$key], [
                     'request_path' => 'max:255|unique:' . Config::get('urlrewrite.urlrewrites_table') . ',request_path' . ($model->urlrewrite ? (',' . $model->urlrewrite->id) : '')
                 ])->validate();
@@ -29,13 +29,14 @@ trait UrlrewriteTrait
 
         static::saved(function ($model) {
             $key = $model->getUrlrewriteKeyName();
+            $model->$key = trim($model->$key, " \t\n\r \v/");
             if (!empty($model->$key)) {
+                $model->$key = '/' . $model->$key;
                 $model->urlrewrite()->updateOrCreate([
                     'entity_type' => $model->getMorphClass(),
                     'entity_id' => $model->id,
                 ], [
                     'request_path' => $model->$key,
-                    'target_path' => '',
                 ]);
             }
         });

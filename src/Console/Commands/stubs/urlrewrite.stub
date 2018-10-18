@@ -31,7 +31,6 @@ class CreateUrlrewriteTable extends Migration
         Schema::create($this->rewritesTable, function (Blueprint $table) {
             $table->increments('id');
             $table->string('request_path');
-            $table->string('target_path');
             $table->morphs('entity');
 
             $table->unique(['request_path']);
