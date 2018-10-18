@@ -6,11 +6,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Viviniko\Urlrewrite\Contracts\Urlrewrite;
 
-class Rewrite implements Urlrewrite
+class Rewrite
 {
-    protected $rewriteMap = [];
+    protected static $rewriteMap = [];
 
     /**
      * Rewrite.
@@ -19,12 +18,10 @@ class Rewrite implements Urlrewrite
      * @param $targetRoute
      * @return mixed
      */
-    public function rewrite($entityType, $targetRoute = null)
+    public static function rewrite($entityType, $targetRoute = null)
     {
         $entityType = is_array($entityType) ? $entityType : [$entityType => $targetRoute];
-        $this->rewriteMap = array_merge($this->rewriteMap, $entityType);
-
-        return $this;
+        static::$rewriteMap = array_merge(static::$rewriteMap, $entityType);
     }
 
     /**
@@ -41,12 +38,12 @@ class Rewrite implements Urlrewrite
         $pathInfo = $request->getPathInfo();
 
         $result = DB::table(Config::get('urlrewrite.urlrewrites_table'))->where('request_path', $pathInfo)->first(['entity_type', 'entity_id']);
-        if ($result && isset($this->rewriteMap[$result->entity_type])) {
+        if ($result && isset(static::$rewriteMap[$result->entity_type])) {
             $rewriteRequest->server->remove('UNENCODED_URL');
             $rewriteRequest->server->remove('IIS_WasUrlRewritten');
             $rewriteRequest->server->remove('REQUEST_URI');
             $rewriteRequest->server->remove('ORIG_PATH_INFO');
-            $rewritePath = '/' . trim(str_replace('/\{\w+\}/', $result->entity_id, $this->rewriteMap[$result->entity_type]), '/');
+            $rewritePath = '/' . trim(str_replace('/\{\w+\}/', $result->entity_id, static::$rewriteMap[$result->entity_type]), '/');
             $query = str_replace($pathInfo, '', $requestUri);
             $rewriteRequest->server->set('REQUEST_URI', $rewritePath . $query);
         }
