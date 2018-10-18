@@ -43,7 +43,7 @@ class Rewrite
             $rewriteRequest->server->remove('IIS_WasUrlRewritten');
             $rewriteRequest->server->remove('REQUEST_URI');
             $rewriteRequest->server->remove('ORIG_PATH_INFO');
-            $rewritePath = '/' . trim(str_replace('/\{\w+\}/', $result->entity_id, static::$rewriteMap[$result->entity_type]), '/');
+            $rewritePath = '/' . trim(preg_replace('/\{\w+\}/', $result->entity_id, static::$rewriteMap[$result->entity_type]), '/');
             $query = str_replace($pathInfo, '', $requestUri);
             $rewriteRequest->server->set('REQUEST_URI', $rewritePath . $query);
         }
