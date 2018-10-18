@@ -46,7 +46,7 @@ class Rewrite implements Urlrewrite
             $rewriteRequest->server->remove('IIS_WasUrlRewritten');
             $rewriteRequest->server->remove('REQUEST_URI');
             $rewriteRequest->server->remove('ORIG_PATH_INFO');
-            $rewritePath = str_replace('/\{\w+\}/', $result->entity_id, $this->rewriteMap[$result->entity_type]);
+            $rewritePath = '/' . trim(str_replace('/\{\w+\}/', $result->entity_id, $this->rewriteMap[$result->entity_type]), '/');
             $query = str_replace($pathInfo, '', $requestUri);
             $rewriteRequest->server->set('REQUEST_URI', $rewritePath . $query);
         }
