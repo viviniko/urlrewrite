@@ -35,21 +35,21 @@ class Rewrite
     public function handle(Request $request, Closure $next)
     {
         $rewriteRequest = clone $request;
-        $requestUri = $request->getRequestUri();
-        $pathInfo = $request->getPathInfo();
+        $requestUri = $rewriteRequest->getRequestUri();
+        $pathInfo = $rewriteRequest->getPathInfo();
 
         $result = $this->getUrlrewriteByRequestPath($pathInfo);
         if ($result && isset(static::$rewriteMap[$result->entity_type])) {
-            $rewriteRequest->server->remove('UNENCODED_URL');
-            $rewriteRequest->server->remove('IIS_WasUrlRewritten');
-            $rewriteRequest->server->remove('REQUEST_URI');
-            $rewriteRequest->server->remove('ORIG_PATH_INFO');
+            $request->server->remove('UNENCODED_URL');
+            $request->server->remove('IIS_WasUrlRewritten');
+            $request->server->remove('REQUEST_URI');
+            $request->server->remove('ORIG_PATH_INFO');
             $rewritePath = '/' . trim(preg_replace('/\{\w+\}/', $result->entity_id, static::$rewriteMap[$result->entity_type]), '/');
             $query = str_replace($pathInfo, '', $requestUri);
-            $rewriteRequest->server->set('REQUEST_URI', $rewritePath . $query);
+            $request->server->set('REQUEST_URI', $rewritePath . $query);
         }
 
-        return $next($rewriteRequest);
+        return $next($request);
     }
 
     protected function getUrlrewriteByRequestPath($requestPath)
