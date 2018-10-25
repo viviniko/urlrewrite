@@ -4,6 +4,7 @@ namespace Viviniko\Urlrewrite;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
@@ -37,7 +38,7 @@ class Rewrite
         $requestUri = $request->getRequestUri();
         $pathInfo = $request->getPathInfo();
 
-        $result = DB::table(Config::get('urlrewrite.urlrewrites_table'))->where('request_path', $pathInfo)->first(['entity_type', 'entity_id']);
+        $result = $this->getUrlrewriteByRequestPath($pathInfo);
         if ($result && isset(static::$rewriteMap[$result->entity_type])) {
             $rewriteRequest->server->remove('UNENCODED_URL');
             $rewriteRequest->server->remove('IIS_WasUrlRewritten');
@@ -49,5 +50,12 @@ class Rewrite
         }
 
         return $next($rewriteRequest);
+    }
+
+    protected function getUrlrewriteByRequestPath($requestPath)
+    {
+        return Cache::remember("urlrewrite.request_path:{$requestPath}", Config::get('cache.ttl', 5), function () use ($requestPath) {
+            return DB::table(Config::get('urlrewrite.urlrewrites_table'))->where('request_path', $requestPath)->first(['entity_type', 'entity_id']);
+        });
     }
 }
