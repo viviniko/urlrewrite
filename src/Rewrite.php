@@ -36,7 +36,7 @@ class Rewrite
     {
         $rewriteRequest = clone $request;
         $requestUri = $rewriteRequest->getRequestUri();
-        $pathInfo = $rewriteRequest->getPathInfo();
+        $pathInfo = preg_replace('@/+@', '/', $rewriteRequest->getPathInfo());
 
         $result = $this->getUrlrewriteByRequestPath($pathInfo);
         if ($result && isset(static::$rewriteMap[$result->entity_type])) {
