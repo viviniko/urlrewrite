@@ -47,6 +47,7 @@ class Rewrite
             $rewritePath = '/' . trim(preg_replace('/\{\w+\}/', $result->entity_id, static::$rewriteMap[$result->entity_type]), '/');
             $query = str_replace($pathInfo, '', $requestUri);
             $request->server->set('REQUEST_URI', $rewritePath . $query);
+            Request::rewrite($rewriteRequest);
         }
 
         return $next($request);

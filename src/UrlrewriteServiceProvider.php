@@ -2,6 +2,8 @@
 
 namespace Viviniko\Urlrewrite;
 
+use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Viviniko\Urlrewrite\Console\Commands\UrlrewriteTableCommand;
@@ -29,10 +31,6 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
 
         // Register commands
         $this->commands('command.urlrewrite.table');
-
-        Route::macro('rewrite', function ($entityType, $targetRoute) {
-            Rewrite::rewrite($entityType, $targetRoute);
-        });
     }
 
     /**
@@ -49,6 +47,25 @@ class UrlrewriteServiceProvider extends BaseServiceProvider
         $this->registerUrlrewriteService();
 
         $this->registerCommands();
+
+        Route::macro('rewrite', function ($entityType, $targetRoute) {
+            Rewrite::rewrite($entityType, $targetRoute);
+        });
+
+        Request::macro('rewrite', function (Request $request = null) {
+            static $rewrite;
+            if ($request) {
+                $rewrite = $request;
+            }
+
+            return $rewrite;
+        });
+
+        Paginator::currentPathResolver(function () {
+            $request = $this->app['request'];
+
+            return ($request->rewrite() ?? $request)->url();
+        });
     }
 
     /**
