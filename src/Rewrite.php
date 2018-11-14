@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Viviniko\Urlrewrite\Facades\Urlrewrite;
 
 class Rewrite
 {
@@ -47,7 +48,7 @@ class Rewrite
             $rewritePath = '/' . trim(preg_replace('/\{\w+\}/', $result->entity_id, static::$rewriteMap[$result->entity_type]), '/');
             $query = str_replace($pathInfo, '', $requestUri);
             $request->server->set('REQUEST_URI', $rewritePath . $query);
-            Request::rewrite($rewriteRequest);
+            Urlrewrite::request($rewriteRequest);
         }
 
         return $next($request);
