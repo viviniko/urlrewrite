@@ -11,7 +11,7 @@ class Urlrewrite extends Facade
 
     public static function request(Request $request = null)
     {
-        if (!$request) {
+        if ($request) {
             static::$request = $request;
         }
 
