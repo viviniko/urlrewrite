@@ -59,4 +59,14 @@ trait UrlrewriteTrait
     {
         return 'url_rewrite';
     }
+
+    public function getUrlAttribute($url)
+    {
+        if (!$url) {
+            $rewriteKey = $this->getUrlrewriteKeyName();
+            return url($this->$rewriteKey);
+        }
+
+        return $url;
+    }
 }
